@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haunted Quill ✒️</title>
+    <style>
+        :root {
+            --bg-color: #1e1e24;
+            --panel-bg: #2b2b36;
+            --text-color: #e0e0e0;
+            --accent-color: #9d4edd;
+            --danger-color: #ff4d4d;
+            --border-color: #444;
+            --success-color: #4cc9f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            background: var(--panel-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #aaa;
+        }
+
+        select, input[type="number"] {
+            padding: 0.5rem;
+            font-size: 1rem;
+            background: #1a1a1f;
+            color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        input[type="number"] {
+            width: 80px;
+        }
+
+        #panicBtn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #panicBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+        }
+
+        #panicBtn:active {
+            transform: scale(0.95);
+        }
+
+        #panicBtn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.5;
+        }
+
+        #status {
+            font-weight: bold;
+            color: var(--success-color);
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        #status.danger {
+            color: var(--danger-color);
+        }
+
+        .editor-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 450px;
+            padding: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            background-color: #121215;
+            color: #fff;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.2);
+        }
+
+        /* Archive Panel Styles */
+        .archive-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .archive-panel h3 {
+            margin-top: 0;
+            margin-bottom: 0.2rem;
+            font-size: 1.1rem;
+            color: var(--success-color);
+        }
+
+        .archive-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1a1a1f;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #333;
+        }
+
+        .archive-text {
+            font-family: monospace;
+            color: #ccc;
+            flex-grow: 1;
+            margin: 0 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .restore-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .restore-btn:hover {
+            background-color: #7b2cbf;
+        }
+
+        .empty-archive {
+            color: #777;
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Spooky floating emoji animations */
+        .ghost-fx {
+            position: absolute;
+            font-size: 2rem;
+            pointer-events: none;
+            user-select: none;
+            animation: floatAway 2s ease-out forwards;
+            z-index: 10;
+        }
+
+        @keyframes floatAway {
+            0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translateY(-100px) scale(1.5) rotate(15deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Haunted Quill ✒️</h1>
+    <p style="color: #aaa; margin-bottom: 1.5rem;">Keep typing. If you pause too long, the ghosts will start eating your words. The longer you wait, the faster they eat.</p>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="preset">Difficulty Preset</label>
+            <select id="preset">
+                <option value="zen">Zen</option>
+                <option value="forgiving" selected>Forgiving</option>
+                <option value="normal">Normal</option>
+                <option value="brutal">Brutal</option>
+                <option value="custom">Custom</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="gracePeriod">Grace Period (sec)</label>
+            <input type="number" id="gracePeriod" min="1" step="0.5">
+        </div>
+
+        <div class="control-group">
+            <label for="deleteSpeed">Delete Speed (sec)</label>
+            <input type="number" id="deleteSpeed" min="0.1" step="0.1">
+        </div>
+
+        <button id="panicBtn" disabled>🚨 PANIC! Restore Latest</button>
+        
+        <div id="status">Status: Waiting for you to type...</div>
+    </div>
+
+    <div class="editor-container" id="editorContainer">
+        <textarea id="editor" placeholder="Start typing... Don't let the ghosts get hungry..."></textarea>
+    </div>
+
+    <div class="archive-panel">
+        <h3>🗄️ Backup Archive</h3>
+        <p style="font-size: 0.8rem; color: #888; margin-top: 0;">Snapshots are safely stored here the exact moment before ghosts start eating.</p>
+        <div id="archiveList">
+            <div class="empty-archive">No backups yet. Start typing!</div>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuration & Presets ---
+        const presets = {
+            zen:       { grace: 15.0, speed: 8.0 },
+            forgiving: { grace: 10.0, speed: 5.0 },
+            normal:    { grace:  5.0, speed: 2.0 },
+            brutal:    { grace:  2.0, speed: 0.8 }
+        };
+
+        // --- DOM Elements ---
+        const editor = document.getElementById('editor');
+        const editorContainer = document.getElementById('editorContainer');
+        const presetSelect = document.getElementById('preset');
+        const graceInput = document.getElementById('gracePeriod');
+        const speedInput = document.getElementById('deleteSpeed');
+        const statusText = document.getElementById('status');
+        const panicBtn = document.getElementById('panicBtn');
+        const archiveList = document.getElementById('archiveList');
+
+        // --- State Variables ---
+        let idleTimer = null;
+        let deleteTimer = null;
+        let currentDeleteSpeed = 0;
+        let isDeleting = false;
+        let archives = []; // Array to store historical backups
+        
+        // --- Audio Context (Offline Synth) ---
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSpookySound(intensityFactor) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.type = 'sine'; 
+
+            const baseFreq = 300;
+            const startFreq = baseFreq + (intensityFactor * 400); 
+            
+            osc.frequency.setValueAtTime(startFreq, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        }
+
+        // --- UI & Preset Logic ---
+        function applyPreset(presetName) {
+            if (presets[presetName]) {
+                graceInput.value = presets[presetName].grace;
+                speedInput.value = presets[presetName].speed;
+            }
+        }
+
+        presetSelect.addEventListener('change', (e) => applyPreset(e.target.value));
+
+        [graceInput, speedInput].forEach(input => {
+            input.addEventListener('input', () => { presetSelect.value = 'custom'; });
+        });
+
+        applyPreset('forgiving');
+
+        // --- Archive System ---
+        function takeSnapshot() {
+            const text = editor.value.trim();
+            if (!text) return;
+            
+            // Don't save identical consecutive snapshots
+            if (archives.length > 0 && archives[0].text === text) return;
+
+            const time = new Date().toLocaleTimeString();
+            let snippet = text.replace(/\s+/g, ' ').substring(0, 45);
+            if (text.length > 45) snippet += "...";
+
+            archives.unshift({ time, text, snippet });
+            
+            // Keep maximum of 10 recent archives
+            if (archives.length > 10) archives.pop();
+            
+            panicBtn.disabled = false;
+            renderArchives();
+        }
+
+        function renderArchives() {
+            archiveList.innerHTML = '';
+            archives.forEach((arc, index) => {
+                const div = document.createElement('div');
+                div.className = 'archive-item';
+                div.innerHTML = `
+                    <span style="color: #888;">[${arc.time}]</span>
+                    <span class="archive-text">"${arc.snippet}"</span>
+                    <button class="restore-btn" onclick="restoreArchive(${index})">Restore</button>
+                `;
+                archiveList.appendChild(div);
+            });
+        }
+
+        // Exposed to global scope for the inline onclick handler
+        window.restoreArchive = function(index) {
+            editor.value = archives[index].text;
+            resetTimers();
+            statusText.textContent = `Status: Restored safely from ${archives[index].time}`;
+            statusText.className = "";
+        };
+
+        // --- Visual Effects ---
+        function spawnVisualEffect() {
+            const fx = document.createElement('div');
+            fx.className = 'ghost-fx';
+            fx.innerText = Math.random() < 0.05 ? '🩻' : '👻';
+
+            const rect = editor.getBoundingClientRect();
+            const x = Math.random() * (rect.width - 50);
+            const y = Math.random() * (rect.height - 50);
+
+            fx.style.left = `${x}px`;
+            fx.style.top = `${y}px`;
+
+            editorContainer.appendChild(fx);
+            setTimeout(() => { fx.remove(); }, 2000);
+        }
+
+        // --- Core Application Logic ---
+        function triggerDeletionTick() {
+            const text = editor.value;
+            
+            // REGEX UPDATE: Matches a word PLUS its trailing whitespace to keep formatting clean
+            const wordRegex = /\S+\s*/g;
+            let match;
+            const matches = [];
+
+            while ((match = wordRegex.exec(text)) !== null) {
+                matches.push({ index: match.index, length: match[0].length });
+            }
+
+            if (matches.length > 0) {
+                const randomMatch = matches[Math.floor(Math.random() * matches.length)];
+                const newText = text.substring(0, randomMatch.index) + text.substring(randomMatch.index + randomMatch.length);
+                
+                editor.value = newText;
+                statusText.textContent = "Status: The ghosts are eating your words!!";
+                statusText.className = "danger";
+
+                spawnVisualEffect();
+                
+                const startingSpeed = parseFloat(speedInput.value) * 1000;
+                const intensity = Math.max(0, 1 - (currentDeleteSpeed / startingSpeed));
+                playSpookySound(intensity);
+
+                // SPEED UPDATE: Accelerate deletion speed by 5% (multiplier 0.95) for a slightly gentler curve
+                currentDeleteSpeed = Math.max(50, currentDeleteSpeed * 0.95);
+
+                deleteTimer = setTimeout(triggerDeletionTick, currentDeleteSpeed);
+            } else {
+                statusText.textContent = "Status: They ate everything...";
+                statusText.className = "";
+                isDeleting = false;
+            }
+        }
+
+        function startHaunting() {
+            if (editor.value.trim().length === 0) return;
+            
+            // Save the exact state right before the destruction starts
+            takeSnapshot();
+            
+            isDeleting = true;
+            currentDeleteSpeed = parseFloat(speedInput.value) * 1000;
+            triggerDeletionTick();
+        }
+
+        function resetTimers() {
+            clearTimeout(idleTimer);
+            clearTimeout(deleteTimer);
+            isDeleting = false;
+            
+            const gracePeriodMs = parseFloat(graceInput.value) * 1000;
+            
+            if (editor.value.trim().length > 0) {
+                idleTimer = setTimeout(startHaunting, gracePeriodMs);
+            }
+        }
+
+        // --- Event Listeners ---
+        editor.addEventListener('input', () => {
+            initAudio(); 
+            statusText.textContent = "Status: Writing safely...";
+            statusText.className = "";
+            resetTimers();
+        });
+
+        editor.addEventListener('focus', initAudio);
+
+        panicBtn.addEventListener('click', () => {
+            if (archives.length > 0) {
+                window.restoreArchive(0); // Restores the most recent snapshot
+            }
+        });
+
+    </script>
+</body>
+</html>
