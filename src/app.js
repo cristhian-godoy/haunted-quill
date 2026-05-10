@@ -108,7 +108,9 @@ function renderArchives() {
 // Exposed to global scope for the inline onclick handler
 window.restoreArchive = function(index) {
     editor.value = archives[index].text;
-    resetTimers();
+    clearTimeout(idleTimer);
+    clearTimeout(deleteTimer);
+    isDeleting = false;
     statusText.textContent = `Status: Restored safely from ${archives[index].time}`;
     statusText.className = "";
 };
