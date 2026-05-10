@@ -23,6 +23,15 @@ let currentDeleteSpeed = 0;
 let isDeleting = false;
 let archives = []; // Array to store historical backups
 
+try {
+    const stored = localStorage.getItem('hauntedArchives');
+    if (stored) {
+        archives = JSON.parse(stored);
+    }
+} catch (e) {
+    console.warn("Failed to load archives from local storage.", e);
+}
+
 // --- Audio Context (Offline Synth) ---
 let audioCtx;
 
@@ -84,8 +93,14 @@ function takeSnapshot() {
 
     archives.unshift({ time, text, snippet });
     
-    // Keep maximum of 10 recent archives
-    if (archives.length > 10) archives.pop();
+    // Keep maximum of 20 recent archives
+    if (archives.length > 20) archives.pop();
+    
+    try {
+        localStorage.setItem('hauntedArchives', JSON.stringify(archives));
+    } catch (e) {
+        console.warn("Failed to save archive to local storage. Quota may be exceeded.", e);
+    }
     
     panicBtn.disabled = false;
     renderArchives();
@@ -208,3 +223,9 @@ panicBtn.addEventListener('click', () => {
         window.restoreArchive(0); // Restores the most recent snapshot
     }
 });
+
+// --- Initialization ---
+if (archives.length > 0) {
+    panicBtn.disabled = false;
+    renderArchives();
+}

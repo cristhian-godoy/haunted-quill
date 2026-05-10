@@ -148,6 +148,19 @@ textarea:focus {
     margin-bottom: 0.2rem;
     font-size: 1.1rem;
     color: var(--success-color);
+    display: flex;
+    align-items: center;
+}
+
+.info-icon {
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    cursor: help;
+    opacity: 0.8;
+}
+
+.info-icon:hover {
+    opacity: 1;
 }
 
 .archive-item {
