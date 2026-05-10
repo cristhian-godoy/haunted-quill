@@ -19,12 +19,29 @@ body {
     overflow-x: hidden;
 }
 
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.kofi-link {
+    transition: transform 0.2s ease;
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+.kofi-link:hover {
+    transform: scale(1.05);
+}
+
 h1 {
     color: var(--accent-color);
     margin-bottom: 0.2rem;
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-top: 0;
 }
 
 .controls {
