@@ -21,12 +21,22 @@ Haunted Quill is a high-stakes, distraction-free writing tool designed to keep y
 You can use the Haunted Quill live at:
 [https://cristhian-godoy.github.io/haunted-quill/](https://cristhian-godoy.github.io/haunted-quill/)
 
-## 🛠️ How to Use
+## 🛠️ Development
 
-1. Open `index.html` in any modern web browser.
-2. Select your difficulty level.
-3. Start typing.
-4. **Whatever you do, don't stop.**
+This project uses [Vite](https://vitejs.dev/) and [pnpm](https://pnpm.io/) for a fast, modern development experience.
+
+1. **Install dependencies:**
+   ```bash
+   pnpm install
+   ```
+2. **Start the development server:**
+   ```bash
+   pnpm run dev
+   ```
+3. **Build for production:**
+   ```bash
+   pnpm run build
+   ```
 
 ## 📜 License
 

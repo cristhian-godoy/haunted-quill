@@ -1,0 +1,208 @@
+:root {
+    --bg-color: #1e1e24;
+    --panel-bg: #2b2b36;
+    --text-color: #e0e0e0;
+    --accent-color: #9d4edd;
+    --danger-color: #ff4d4d;
+    --border-color: #444;
+    --success-color: #4cc9f0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    position: relative;
+    overflow-x: hidden;
+}
+
+h1 {
+    color: var(--accent-color);
+    margin-bottom: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    background: var(--panel-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #aaa;
+}
+
+select, input[type="number"] {
+    padding: 0.5rem;
+    font-size: 1rem;
+    background: #1a1a1f;
+    color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+input[type="number"] {
+    width: 80px;
+}
+
+#panicBtn {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#panicBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+}
+
+#panicBtn:active {
+    transform: scale(0.95);
+}
+
+#panicBtn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.5;
+}
+
+#status {
+    font-weight: bold;
+    color: var(--success-color);
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+#status.danger {
+    color: var(--danger-color);
+}
+
+.editor-container {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+textarea {
+    width: 100%;
+    height: 450px;
+    padding: 1.5rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    background-color: #121215;
+    color: #fff;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px rgba(157, 78, 221, 0.2);
+}
+
+/* Archive Panel Styles */
+.archive-panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.archive-panel h3 {
+    margin-top: 0;
+    margin-bottom: 0.2rem;
+    font-size: 1.1rem;
+    color: var(--success-color);
+}
+
+.archive-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1a1a1f;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #333;
+}
+
+.archive-text {
+    font-family: monospace;
+    color: #ccc;
+    flex-grow: 1;
+    margin: 0 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.restore-btn {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.restore-btn:hover {
+    background-color: #7b2cbf;
+}
+
+.empty-archive {
+    color: #777;
+    font-style: italic;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Spooky floating emoji animations */
+.ghost-fx {
+    position: absolute;
+    font-size: 2rem;
+    pointer-events: none;
+    user-select: none;
+    animation: floatAway 2s ease-out forwards;
+    z-index: 10;
+}
+
+@keyframes floatAway {
+    0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(-100px) scale(1.5) rotate(15deg); }
+}
